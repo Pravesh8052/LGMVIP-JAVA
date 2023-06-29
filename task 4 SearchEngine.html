@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Search Engine</title>
+    <style>
+        #search-form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Engine</h1>
+    <form id="search-form">
+        <input type="text" id="search-input" placeholder="Enter your query">
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="search-results">
+        <h2>Search Results</h2>
+        <ul id="results-list"></ul>
+    </div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var query = document.getElementById('search-input').value;
+            search(query);
+        });
+
+        function search(query) {
+            fetch('/search?q=' + encodeURIComponent(query))
+                .then(response => response.json())
+                .then(data => displayResults(data));
+        }
+
+        function displayResults(results) {
+            var resultList = document.getElementById('results-list');
+            resultList.innerHTML = '';
+
+            if (results.length === 0) {
+                resultList.innerHTML = '<li>No results found</li>';
+            } else {
+                results.forEach(function(result) {
+                    var listItem = document.createElement('li');
+                    listItem.textContent = result;
+                    resultList.appendChild(listItem);
+                });
+            }
+        }
+    </script>
+</body>
+</html>
